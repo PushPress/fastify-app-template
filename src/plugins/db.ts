@@ -25,12 +25,10 @@ export default fp(
 
         if (error) {
           fastify.log.error({ error }, "failed to run `migrateToLatest`");
-          throw new Error("failed to run `migrateToLatest`");
         }
       }
     });
 
-    // Close the db connection after the server has finished handling remaining requests before exiting
     fastify.addHook("onClose", () => db.destroy());
     done();
   },
