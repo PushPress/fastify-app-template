@@ -1,0 +1,49 @@
+name: "${APP_NAME}-dev"
+services:
+  db:
+    image: postgres:15
+    container_name: ${APP_NAME}-db-dev
+    env_file: .env
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_NAME}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["-c", "max_connections=9999"]
+    networks:
+      - dev-network
+
+  redis:
+    image: redis:6.2.6
+    container_name: ${APP_NAME}-redis-dev
+    command:
+      - redis-server
+      - --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_dev:/data"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dev-network
+
+volumes:
+  postgres_data_dev:
+    driver: local
+  redis_dev:
+    driver: local
+networks:
+  dev-network:
+    driver: bridge
