@@ -8,6 +8,7 @@
 
 - [Getting Started](#getting-started)
 - [Available Scripts](#available-scripts)
+- [Services](#services)
 - [OpenAPI Documentation](#openapi-docs)
 - [Database](#database)
 - [Database Migrations](#database-migrations)
@@ -79,6 +80,14 @@ Run eslint
 ### `pnpm test`
 
 Run the test cases.
+
+## Services
+
+The `SERVICE` environment variable can be set to `api`, `worker`, or `monolith` to run the app in a specific mode.
+
+- The `/api` folder contains the api service, which should be primarily responsible for handling incoming requests and delegating to other services.
+- The `/worker` folder contains the worker service, which should be responsible for handling long running tasks.
+- `monolith` runs both the api and worker services in the same process, which is useful for simpler apps that dont need to scale workers or APIs indpendently
 
 ## OpenAPI Docs
 
