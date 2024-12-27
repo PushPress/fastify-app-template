@@ -3,20 +3,13 @@ import "zod-openapi/extend";
 
 import { join } from "node:path";
 import { AutoloadPluginOptions } from "@fastify/autoload";
-import { FastifyPluginAsync, FastifyServerOptions } from "fastify";
+import { FastifyPluginCallback, FastifyServerOptions } from "fastify";
 import Manifest, { Service } from "./manifest";
 import { serializerCompiler, validatorCompiler } from "fastify-zod-openapi";
 import qs from "qs";
 import AutoLoad from "@fastify/autoload";
-import { newTracer, Tracer } from "./datadog";
 
 const service = Service.parse(process.env.SERVICE);
-
-declare module "fastify" {
-  interface FastifyInstance {
-    tracer: Tracer;
-  }
-}
 
 /**
  * Define your root app options + server options here
@@ -46,13 +39,10 @@ const options: AppOptions = {
   querystringParser: qs.parse,
 };
 
-const app: FastifyPluginAsync<AppOptions> = async (fastify, options) => {
+const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
   // set zod-openapi compilers
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
-
-  // Add datadog tracer
-  fastify.decorate("tracer", await newTracer());
 
   // register root plugins
   void fastify.register(AutoLoad, {
@@ -70,6 +60,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, options) => {
   void Manifest[service].map(([plugin, opts]) =>
     fastify.register(plugin, opts ?? {}),
   );
+  done();
 };
 
 export default app;

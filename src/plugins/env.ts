@@ -45,21 +45,24 @@ const schema = {
   },
 } as const satisfies JSONSchema;
 
+export type Config = FromSchema<typeof schema>;
+
 /**
  * Register environment variables
  */
 export default fp(
   (fastify, _, done) => {
     fastify.register(fastifyEnv, {
+      confKey: "config",
       schema,
     });
     done();
   },
-  { name: "env" },
+  { name: "env", dependencies: [] },
 );
 
 declare module "fastify" {
   interface FastifyInstance {
-    config: FromSchema<typeof schema>;
+    config: Config;
   }
 }

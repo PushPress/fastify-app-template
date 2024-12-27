@@ -23,9 +23,6 @@ importers:
       '@fastify/swagger-ui':
         specifier: ^5.2.0
         version: 5.2.0
-      '@pushpress/datadog':
-        specifier: ^0.4.2
-        version: 0.4.2
       dd-trace:
         specifier: ^5.30.0
         version: 5.30.0
@@ -473,9 +470,6 @@ packages:
 
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
-
-  '@pushpress/datadog@0.4.2':
-    resolution: {integrity: sha512-iWgpeE6Sm+7elsxvlu344AGGcgXdoa8R74HBmxoKb93JIgWzWgmXh2btGJNksyeejfb8UICSHu6FXTyQvZOcdA==, tarball: https://npm.pkg.github.com/download/@pushpress/datadog/0.4.2/31cebabc7eb1d5125da2af591d72b28168eb1591}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -2456,11 +2450,6 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
-
-  '@pushpress/datadog@0.4.2':
-    dependencies:
-      dd-trace: 5.30.0
-      ts-pattern: 5.6.0
 
   '@tsconfig/node10@1.0.11': {}
 
