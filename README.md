@@ -40,7 +40,7 @@ Use npm-check-updates to bring the dependencies up to date. If there are any bre
 npx npm-check-updates -i
 ```
 
-Copy the `.env.sample` file to `.env` and update the values to match your environment.
+Copy the `.env.sample` file to `.env` and update the values to match your environment. Update `.env.test` with values for your test database and application
 
 ```bash
 cp .env.sample .env
