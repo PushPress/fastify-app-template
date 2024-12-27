@@ -8,9 +8,9 @@
 
 - [Getting Started](#getting-started)
 - [Available Scripts](#available-scripts)
-- [OpenAPI Docs](#openapi-docs)
+- [OpenAPI Documentation](#openapi-docs)
+- [Database](#database)
 - [Database Migrations](#database-migrations)
-- [Monitoring](#monitoring)
 - [Learn More](#learn-more)
 
 ## Getting Started
@@ -18,8 +18,9 @@
 Clone the repos and run `pnpm install` to install the dependencies.
 
 ```bash
-# clone the repo
-git clone https://github.com/Pushpress/fastify-app-template.git
+# clone the repo into a new project and remove the git history
+git clone https://github.com/Pushpress/fastify-app-template.git my-project
+rm -rf .git
 ```
 
 ```bash
@@ -83,23 +84,20 @@ Run the test cases.
 
 A Swagger UI is generated automatically and is available at [http://localhost:3000/docs](http://localhost:3000/docs)
 
-## Database Migrations
+## Database
+
+This template comes with a postres database and uses [kysely](https://kysely.dev/) for type safe database access. Kysely is a query builder rather than an ORM, so there is no magic happening under the hood. Its just SQL, but with high quality types.
+
+Included are a few ecosystem tools to make working with a postgres database easier and safer, without reaching for an ORM.
+
+[kysely-codegen](https://github.com/kysely-org/kysely-codegen) is used to generate typescript types from the database schema.
+[kysely-ctl](https://github.com/kysely-org/kysely-ctl) is used to manage database migrations.
+
+## Migrations
 
 Kysely offers a type safe way to automate database migrations with [kysely-ctl](https://github.com/kysely-org/kysely-ctl). Use the `pnpm migrate <command>` to manage migrations, run `pnpm migrate --help` for more information.
 
 NOTE: This creates an "onReady" hook that will run the migrations when the server starts to automatically apply migrations. To disable this feature set MIGRATE_ON_START to false in the .env file
-
-## Monitoring
-
-Apps should use datadog to monitor their performance and health.
-
-### Logs
-
-Apps should stream logs to stdout and stderr so datadog can collect them.
-
-### custom metrics
-
-Configure custom metrics in datadog.ts so you can increment them in your app without configuring a tracer or worrying about type safety.
 
 ## Learn More
 
