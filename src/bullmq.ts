@@ -71,6 +71,7 @@ function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
   return {
     build: (name, queueOptions) => {
       return {
+        globalEvents: internalEventEmitter,
         events: new QueueEvents(name),
         queue: new Queue(name, {
           connection,
