@@ -9,12 +9,13 @@
   "scripts": {
     "test": "vitest --no-file-parallelism",
     "test:coverage": "vitest --coverage --watch=false --no-file-parallelism",
-    "start": "npm run build:ts && fastify start -o -P dist/app.js",
+    "start": "pnpm build && fastify start -o -P dist/app.js",
     "lint": "pnpm eslint .",
-    "build:ts": "tsc",
+    "build": "tsc",
     "watch:ts": "tsc -w",
-    "dev": "npm run build:ts && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
+    "dev": "pnpm build && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
     "dev:start": "fastify start --ignore-watch=.ts$ -o -w -P dist/app.js",
+    "start:prod": "fastify start -o -P dist/app.js",
     "codegen": "export $(grep -v '^#' .env | xargs) && kysely-codegen --dialect postgres --out-file src/types/db.ts --camel-case --url=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}",
     "migrate": "kysely migrate"
   },
