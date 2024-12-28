@@ -1,4 +1,4 @@
-# docker build . --secret id=github_token,env=GITHUB_TOKEN -t A:dev && docker run --rm -it --entrypoint bash committed-club:dev
+# docker build . --secret id=github_token,env=GITHUB_TOKEN -t template:dev && docker run --rm -it --entrypoint bash template:dev
 
 FROM node:22.12-bullseye-slim AS base
 
@@ -42,7 +42,6 @@ FROM base
 COPY package.json .
 
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/migrations ./migrations
 COPY --from=builder /app/.config ./.config
 
 COPY --from=prod_deps /app/node_modules ./node_modules
@@ -56,4 +55,4 @@ ENV DD_GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 
 ENV DD_SERVICE=${APP_NAME}
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "start:prod"]
