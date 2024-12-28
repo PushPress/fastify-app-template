@@ -22,6 +22,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@bull-board/api": "^6.5.4",
+    "@bull-board/fastify": "^6.5.4",
     "@fastify/autoload": "^6.0.0",
     "@fastify/env": "^5.0.1",
     "@fastify/sensible": "^6.0.0",

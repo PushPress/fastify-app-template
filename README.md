@@ -113,6 +113,8 @@ NOTE: This creates an "onReady" hook that will run the migrations when the serve
 
 Background jobs are handled by [bullmq](https://github.com/taskforcesh/bullmq) and a lightweight wrapper called bullify, that provides a simpler way to build type safe queues, workers and the jobs they process.
 
+Th BullMQ dashboard is available at [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
+
 ### Queues
 
 Define a queue and its associated worker and job types in the `queues` folder using the `bullify` function. Then decorate the fastify instance with the queues and workers. When adding a job to a queue the job data and any result type will be type checked, all underlying bullmq APIS and options are exposed with sensible defaults applied.
