@@ -9,6 +9,7 @@ import { serializerCompiler, validatorCompiler } from "fastify-zod-openapi";
 import qs from "qs";
 import AutoLoad from "@fastify/autoload";
 import EventEmitter from "eventemitter2";
+
 const service = Service.parse(process.env.SERVICE);
 
 export const internalEventEmitter = new EventEmitter();
