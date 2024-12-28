@@ -42,6 +42,24 @@ const schema = {
       type: "boolean",
       default: true,
     },
+    REDIS_HOST: {
+      type: "string",
+      default: "localhost",
+    },
+    REDIS_PORT: {
+      type: "number",
+      default: 6379,
+    },
+    REDIS_USERNAME: {
+      type: "string",
+    },
+    REDIS_PASSWORD: {
+      type: "string",
+    },
+    REDIS_CLUSTER: {
+      type: "boolean",
+      default: false,
+    },
   },
 } as const satisfies JSONSchema;
 
