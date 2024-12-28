@@ -1,15 +1,8 @@
 // This file contains code that we reuse between our tests.
+import "../src/plugins/env";
 import helper from "fastify-cli/helper.js";
 import * as path from "node:path";
 import * as test from "node:test";
-import { Config } from "../src/plugins/env";
-
-// Declare the fastify instance type for the test tsconfig project scope
-declare module fastify {
-  interface FastifyInstance {
-    config: Config;
-  }
-}
 
 export type TestContext = {
   after: typeof test.after;

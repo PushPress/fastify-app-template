@@ -28,8 +28,8 @@ export default fp(
         }
       }
     });
+    fastify.decorate("db", db);
 
-    fastify.addHook("onClose", () => db.destroy());
     done();
   },
   { name: "db", dependencies: ["env"] },

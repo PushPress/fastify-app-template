@@ -8,8 +8,10 @@ import Manifest, { Service } from "./manifest";
 import { serializerCompiler, validatorCompiler } from "fastify-zod-openapi";
 import qs from "qs";
 import AutoLoad from "@fastify/autoload";
-
+import EventEmitter from "eventemitter2";
 const service = Service.parse(process.env.SERVICE);
+
+export const internalEventEmitter = new EventEmitter();
 
 /**
  * Define your root app options + server options here
@@ -60,6 +62,14 @@ const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
   void Manifest[service].map(([plugin, opts]) =>
     fastify.register(plugin, opts ?? {}),
   );
+
+  // Run all on close hooks in an order sensitive way
+  fastify.addHook("onClose", async () => {
+    // close all workers
+    await internalEventEmitter.emitAsync("close");
+    await fastify.db.destroy();
+    await fastify.redis().quit();
+  });
   done();
 };
 

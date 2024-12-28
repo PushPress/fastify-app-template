@@ -1,8 +1,7 @@
-import { FastifyPluginAsync } from "fastify";
+import { FastifyPluginCallback } from "fastify";
 
-// TODO: implement
-const app: FastifyPluginAsync = () => {
-  return Promise.resolve();
+const app: FastifyPluginCallback = (_, __, done) => {
+  done();
 };
 
 export default app;
