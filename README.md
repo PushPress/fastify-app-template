@@ -12,6 +12,7 @@
 - [OpenAPI Documentation](#openapi-docs)
 - [Database](#database)
 - [Database Migrations](#database-migrations)
+- [Background Jobs](#background-jobs)
 - [Learn More](#learn-more)
 
 ## Getting Started
@@ -107,6 +108,24 @@ Included are a few ecosystem tools to make working with a postgres database easi
 Kysely offers a type safe way to automate database migrations with [kysely-ctl](https://github.com/kysely-org/kysely-ctl). Use the `pnpm migrate <command>` to manage migrations, run `pnpm migrate --help` for more information.
 
 NOTE: This creates an "onReady" hook that will run the migrations when the server starts to automatically apply migrations. To disable this feature set MIGRATE_ON_START to false in the .env file
+
+## Background Jobs
+
+Background jobs are handled by [bullmq](https://github.com/taskforcesh/bullmq) and a lightweight wrapper called bullify, that provides a simpler way to build type safe queues, workers and the jobs they process.
+
+### Queues
+
+Define a queue and its associated worker and job types in the `queues` folder using the `bullify` function. Then decorate the fastify instance with the queues and workers. When adding a job to a queue the job data and any result type will be type checked, all underlying bullmq APIS and options are exposed with sensible defaults applied.
+
+Some Best Practices:
+
+- Configure a jobId when adding a job to the queue so jobs can remain idempotent
+- Be mindful of the retry and job retention strategies, a job needs to be retained long enough for it to be retried and long enough to prevent duplicate jobs from being processed
+- Configure concurrency limits on workers, since each worker defaults to processing running 1 job at a time
+
+### Workers
+
+Run workers in the `worker` folder using the `.run` method on the worker. This way workers can be conditionally registered when running in a worker service, or when running in a monolith service.
 
 ## Learn More
 
