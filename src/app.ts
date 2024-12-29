@@ -3,12 +3,18 @@ import "zod-openapi/extend";
 
 import { join } from "node:path";
 import { AutoloadPluginOptions } from "@fastify/autoload";
-import { FastifyPluginCallback, FastifyServerOptions } from "fastify";
+import {
+  FastifyInstance,
+  FastifyPluginCallback,
+  FastifyServerOptions,
+} from "fastify";
 import Manifest, { Service } from "./manifest";
 import { serializerCompiler, validatorCompiler } from "fastify-zod-openapi";
 import qs from "qs";
 import AutoLoad from "@fastify/autoload";
 import EventEmitter from "eventemitter2";
+import { repl } from "./repl";
+import fp from "fastify-plugin";
 
 const service = Service.parse(process.env.SERVICE);
 
@@ -20,16 +26,20 @@ export const internalEventEmitter = new EventEmitter();
 export interface AppOptions
   extends FastifyServerOptions,
     Partial<AutoloadPluginOptions> {
+  /**
+   *  Service to run as, (e.g api, worker, monolith)
+   */
   service: Service;
+  /**
+   * Start the application in a repl session
+   */
+  repl: boolean;
 }
 
 /**
  * This options object is passed to the root plugin below from the fastify CLI
  */
 const options: AppOptions = {
-  /**
-   *  Service to run as, (e.g api, worker, monolith)
-   */
   service,
   /**
    *  Ignore trailing slashes so /example/ is the same as /example
@@ -40,6 +50,11 @@ const options: AppOptions = {
    * https://github.com/ljharb/qs
    */
   querystringParser: qs.parse,
+
+  /**
+   * qs provides more flexible query string parsing capabilities
+   */
+  repl: false,
 };
 
 const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
@@ -59,11 +74,6 @@ const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
     options: options,
   });
 
-  // register service plugins
-  void Manifest[service].map(([plugin, opts]) =>
-    fastify.register(plugin, opts ?? {}),
-  );
-
   // Run all on close hooks in an order sensitive way
   fastify.addHook("onClose", async () => {
     // close all workers
@@ -71,8 +81,31 @@ const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
     await fastify.db.destroy();
     await fastify.redis().quit();
   });
+
+  // Start the repl and expose all decorators on the server context in the repl
+  if (options.repl) {
+    mountServices(Manifest, fastify, { encapsulate: false });
+    repl(options.service, fastify);
+    done();
+    return;
+  }
+
+  mountServices(Manifest, fastify, { encapsulate: true });
   done();
 };
 
 export default app;
 export { app, options };
+
+/**
+ * Register the plugins for the service according to the manifest
+ */
+function mountServices(
+  manifest: typeof Manifest,
+  fastify: FastifyInstance,
+  { encapsulate }: { encapsulate: boolean },
+) {
+  void manifest[service].map(([plugin, opts]) =>
+    fastify.register(encapsulate ? plugin : fp(plugin), opts ?? {}),
+  );
+}

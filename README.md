@@ -10,6 +10,7 @@
 - [Available Scripts](#available-scripts)
 - [Services](#services)
 - [OpenAPI Documentation](#openapi-docs)
+- [REPL](#repl)
 - [Database](#database)
 - [Database Migrations](#database-migrations)
 - [Background Jobs](#background-jobs)
@@ -82,6 +83,10 @@ Run eslint
 
 Run the test cases.
 
+### `pnpm repl`
+
+Start the server in a repl session. see [REPL](#repl) for more details.
+
 ## Services
 
 The `SERVICE` environment variable can be set to `api`, `worker`, or `monolith` to run the app in a specific mode.
@@ -93,6 +98,14 @@ The `SERVICE` environment variable can be set to `api`, `worker`, or `monolith` 
 ## OpenAPI Docs
 
 A Swagger UI is generated automatically and is available at [http://localhost:3000/docs](http://localhost:3000/docs)
+
+## REPL
+
+A read-eval-print-loop (REPL) is available for debugging and development. Repls are useful for easily testing functionality without having to write extra code.
+
+The REPL exposes the server instance and all decorators on the server instance, which is different from the production environment, where plugins registered on the different services are encapsulated to maintain better isolation since they are deployed as separate processes.
+
+Use the SERVICE environment variable to switch between the different services or use the `--service` flag to start the repl with a specific service.
 
 ## Database
 
