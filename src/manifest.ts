@@ -16,7 +16,7 @@ type PluginConfig = [FastifyPlugin] | [FastifyPlugin, FastifyPluginOptions];
 /**
  * Configure which plugins get registered at the level
  */
-type Manifest = Record<Service, PluginConfig[]>;
+export type Manifest = Record<Service, PluginConfig[]>;
 
 /**
  * Configure which plugins get registered at the level
