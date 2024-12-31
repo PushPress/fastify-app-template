@@ -70,10 +70,12 @@ function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
 
   return {
     build: (name, queueOptions) => {
+      // wrapping the queue name in brackets ensures it is redis cluster compatible
+      const queueName = `{${name}}`;
       return {
         globalEvents: internalEventEmitter,
-        events: new QueueEvents(name),
-        queue: new Queue(name, {
+        events: new QueueEvents(queueName),
+        queue: new Queue(queueName, {
           connection,
           ...queueOptions,
           defaultJobOptions: {
@@ -83,7 +85,7 @@ function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
         }),
         worker: {
           run: (processor, workerOptions) => {
-            const worker = new Worker(name, processor, {
+            const worker = new Worker(queueName, processor, {
               ...workerOptions,
               connection,
             });
@@ -108,8 +110,8 @@ export default bull({
       delay: 5 * 1000,
     },
     // remove failed jobs after 7 days
-    removeOnFail: { count: 10000, age: 1000 * 60 * 60 * 24 * 7 },
+    removeOnFail: { count: 10000, age: 60 * 60 * 24 * 7 },
     // remove completed jobs after 1 hour
-    removeOnComplete: { count: 10000, age: 1000 * 60 * 60 },
+    removeOnComplete: { count: 10000, age: 60 * 60 },
   },
 });
