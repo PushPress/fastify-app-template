@@ -1,4 +1,6 @@
 import fp from "fastify-plugin";
+import fs from "fs";
+import path from "path";
 import { db, migrator } from "../database";
 
 /**
@@ -9,6 +11,12 @@ export default fp(
     // Migrate the database to the latest version
     fastify.addHook("onReady", async () => {
       if (fastify.config.MIGRATE_ON_START === true) {
+        const migrationDir = path.join(__dirname, "../migrations");
+
+        if (!fs.existsSync(migrationDir)) {
+          fs.mkdirSync(migrationDir);
+        }
+
         const { error, results } = await migrator.migrateToLatest();
 
         results?.forEach((it) => {
