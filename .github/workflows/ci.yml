@@ -41,7 +41,7 @@ jobs:
         run: docker compose -f docker-compose.test.yml up -d
 
       - name: Test
-        run: pnpm test:ci
+        run: pnpm test:coverage
 
       - name: Tear down test environment
         run: docker compose -f docker-compose.test.yml down
