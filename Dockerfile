@@ -3,7 +3,7 @@
 FROM node:22.12-bullseye-slim AS base
 
 RUN apt-get update && apt-get install -y openssl python3 make g++ \
-  && npm install -g pnpm@9.3
+  && npm install -g pnpm@9.15
 
 WORKDIR /app
 
@@ -25,7 +25,8 @@ FROM all_deps AS builder
 
 COPY . .
 
-RUN pnpm run build
+RUN pnpm build:web
+RUN pnpm build
 
 ###
 
@@ -41,10 +42,12 @@ FROM base
 
 COPY package.json .
 
+COPY --from=prod_deps /app/node_modules ./node_modules
+
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/.config ./.config
+COPY --from=builder /app/spa ./spa
 
-COPY --from=prod_deps /app/node_modules ./node_modules
 
 ARG GIT_REPOSITORY_URL
 ENV DD_GIT_REPOSITORY_URL=${GIT_REPOSITORY_URL}
