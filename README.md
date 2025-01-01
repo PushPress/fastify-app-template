@@ -10,6 +10,7 @@
 - [Available Scripts](#available-scripts)
 - [Services](#services)
 - [OpenAPI Documentation](#openapi-docs)
+- [React App](#React)
 - [REPL](#repl)
 - [Database](#database)
 - [Database Migrations](#database-migrations)
@@ -69,7 +70,12 @@ In the project directory, you can run:
 To start the app in dev mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Configre the `FASTIFY_PORT` environment variable to change the port.
+Configure the `FASTIFY_PORT` environment variable to change the port.
+Specify a SERVICE environment variable to configure which plugins execute.
+
+### `pnpm dev:web`
+
+Start the vite+react development server at the default port `http://localhost:5173`
 
 ### `pnpm start`
 
@@ -93,7 +99,12 @@ The `SERVICE` environment variable can be set to `api`, `worker`, or `monolith` 
 
 - The `/api` folder contains the api service, which should be primarily responsible for handling incoming requests and delegating to other services.
 - The `/worker` folder contains the worker service, which should be responsible for handling long running tasks.
+- The `/web` folder serves a vite react app at the root route as a static file. By default the web service also registers the API routes but it can be configured to only serve the app in the SPA folder.
 - `monolith` runs both the api and worker services in the same process, which is useful for simpler apps that dont need to scale workers or APIs indpendently
+
+# React App
+
+The fastify app template supports Web UIs from simple components to minimize initial complexity and maximize extensibility. Fastify efficiently serves static html through the `@fastify/static` plugin. The template comes pre-built with a single page react app built with [vite](https://vite.dev), but any html file will work.
 
 ## OpenAPI Docs
 

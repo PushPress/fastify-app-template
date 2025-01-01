@@ -10,7 +10,7 @@ const app: FastifyPluginCallback = (fastify, opts, done) => {
 
   void fastify.register(AutoLoad, {
     dir: join(__dirname, "routes"),
-    options: opts,
+    options: { ...opts, prefix: "/api" },
   });
 
   done();

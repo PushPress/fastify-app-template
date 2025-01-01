@@ -1,6 +1,7 @@
 import fp from "fastify-plugin";
 import fastifyEnv from "@fastify/env";
 import { FromSchema, JSONSchema } from "json-schema-to-ts";
+import { Service } from "../manifest";
 
 /** Define your environment variables schema here */
 const schema = {
@@ -20,7 +21,7 @@ const schema = {
     },
     SERVICE: {
       type: "string",
-      enum: ["api", "worker", "monolith"],
+      enum: Service.options,
     },
     DB_HOST: {
       type: "string",

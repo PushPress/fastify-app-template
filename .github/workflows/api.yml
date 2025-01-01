@@ -1,8 +1,12 @@
-name: PR Checks
+name: API Checks
 
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "src/**"
+      - "test/**"
+      - ".github/workflows/api.yaml"
 
 jobs:
   test:
