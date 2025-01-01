@@ -13,8 +13,10 @@
     "start": "pnpm build && fastify start -o -P dist/app.js",
     "lint": "pnpm eslint .",
     "build": "tsc",
+    "build:web": "cd spa && pnpm build",
     "watch:ts": "tsc -w",
     "dev": "pnpm build && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
+    "dev:web": "cd spa && pnpm dev",
     "dev:start": "fastify start --ignore-watch=.ts$ -o -w -P dist/app.js",
     "repl": "pnpm build && fastify start -o -P dist/app.js -- --repl",
     "start:prod": "fastify start -o -P dist/app.js",
@@ -30,6 +32,7 @@
     "@fastify/autoload": "^6.0.0",
     "@fastify/env": "^5.0.1",
     "@fastify/sensible": "^6.0.0",
+    "@fastify/static": "^8.0.3",
     "@fastify/swagger": "^9.4.0",
     "@fastify/swagger-ui": "^5.2.0",
     "bullmq": "^5.34.5",
@@ -58,6 +61,7 @@
     "@vitest/coverage-v8": "^2.1.8",
     "c8": "^10.1.2",
     "concurrently": "^9.0.0",
+    "esbuild": "^0.24.2",
     "eslint": "^9.17.0",
     "fastify-tsconfig": "^2.0.0",
     "globals": "^15.14.0",
@@ -68,5 +72,8 @@
     "typescript-eslint": "^8.18.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.24.2"
   }
 }

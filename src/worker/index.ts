@@ -6,7 +6,7 @@ const app: FastifyPluginCallback = (fastify, opts, done) => {
   // load plugins
   void fastify.register(AutoLoad, {
     dir: join(__dirname, "plugins"),
-    options: opts,
+    options: { ...opts, prefix: "/worker" },
   });
 
   // load workers
