@@ -20,7 +20,7 @@ const {
   worker: exampleWorker,
   events: exampleEvents,
 } = bullmq.build("example", {
-  defaultJobOptions: { removeOnFail: true },
+  defaultJobOptions: { removeOnFail: true, removeOnComplete: { age: 60 } },
 });
 
 export { exampleQueue, exampleWorker, exampleEvents };

@@ -116,6 +116,13 @@ Included are a few ecosystem tools to make working with a postgres database easi
 [kysely-codegen](https://github.com/kysely-org/kysely-codegen) is used to generate typescript types from the database schema.
 [kysely-ctl](https://github.com/kysely-org/kysely-ctl) is used to manage database migrations.
 
+PgAdmin is included in the local development docker compose file for local database administration at <http://localhost:5050>. Login with username `admin@admin.com` and password `admin`.
+
+# Redis
+
+The fastify template depends on redis for caching and as the BullMQ back end. Redis is available in both local development and testing throught the included compose files. Redis Commander is also available in local development for improved
+inspection and debugging at <http://localhost:8081>
+
 ## Migrations
 
 Kysely offers a type safe way to automate database migrations with [kysely-ctl](https://github.com/kysely-org/kysely-ctl). Use the `pnpm migrate <command>` to manage migrations, run `pnpm migrate --help` for more information.
@@ -137,6 +144,9 @@ Some Best Practices:
 - Configure a jobId when adding a job to the queue so jobs can remain idempotent
 - Be mindful of the retry and job retention strategies, a job needs to be retained long enough for it to be retried and long enough to prevent duplicate jobs from being processed
 - Configure concurrency limits on workers, since each worker defaults to processing running 1 job at a time
+- When updating any recurring job, ensure that you either update an existing job configuration or delete the previous configuration and create a new one. It's possible to mistakenly create a new recurring (cron) job without
+  deleting the old one.
+- When unsure about how changing some BullMQ configuration may change its behavior, use redis commander to inspect the BullMQ key path contents. inspect queue metadata etc.
 
 ### Workers
 
