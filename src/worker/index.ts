@@ -5,7 +5,7 @@ import { join } from "node:path";
 const app: FastifyPluginCallback = (fastify, opts, done) => {
   void fastify.register(AutoLoad, {
     dir: join(__dirname, "plugins"),
-    options: opts,
+    options: { ...opts, prefix: "/worker" },
   });
   done();
 };
