@@ -19,6 +19,7 @@ if (process.env.REDIS_CLUSTER == "true") {
       redisOptions: {
         username: process.env.REDIS_USERNAME,
         password: process.env.REDIS_PASSWORD,
+        maxRetriesPerRequest: null,
         tls: {},
       },
       slotsRefreshTimeout: Number(process.env.CACHE_SLOT_TIMEOUT) || 2500,
@@ -29,6 +30,7 @@ if (process.env.REDIS_CLUSTER == "true") {
     host: process.env.REDIS_HOST,
     username: process.env.REDIS_USERNAME,
     password: process.env.REDIS_PASSWORD,
+    maxRetriesPerRequest: null,
     port,
   });
 }
