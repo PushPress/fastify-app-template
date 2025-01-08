@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "pretest": "export $(cat .env.test | xargs)",
     "test": "vitest --no-file-parallelism",
     "test:coverage": "vitest --coverage --watch=false --no-file-parallelism",
     "start": "pnpm build && fastify start -o -P dist/app.js",
@@ -33,6 +34,7 @@
     "@fastify/swagger-ui": "^5.2.0",
     "bullmq": "^5.34.5",
     "dd-trace": "^5.30.0",
+    "dotenv": "^16.4.7",
     "eventemitter2": "^6.4.9",
     "fastify": "^5.0.0",
     "fastify-cli": "^7.3.0",
