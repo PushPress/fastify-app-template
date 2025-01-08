@@ -35,6 +35,9 @@ importers:
       dd-trace:
         specifier: ^5.30.0
         version: 5.30.0
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       eventemitter2:
         specifier: ^6.4.9
         version: 6.4.9
