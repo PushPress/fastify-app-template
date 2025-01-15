@@ -8,7 +8,7 @@ export default tseslint.config(
   // Lint source files with strict typescript rules
   {
     files: ["src/**/**.ts"],
-    extends: tseslint.configs.recommendedTypeChecked,
+    extends: tseslint.configs.strictTypeChecked,
   },
   {
     languageOptions: {
