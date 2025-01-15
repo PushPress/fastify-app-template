@@ -10,7 +10,7 @@ export default fp(
   (fastify, _, done) => {
     // Migrate the database to the latest version
     fastify.addHook("onReady", async () => {
-      if (fastify.config.MIGRATE_ON_START === true) {
+      if (fastify.config.MIGRATE_ON_START) {
         const migrationDir = path.join(__dirname, "../migrations");
 
         if (!fs.existsSync(migrationDir)) {
