@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { AutoloadPluginOptions } from "@fastify/autoload";
 import {
   FastifyInstance,
-  FastifyPluginCallback,
+  FastifyPluginAsync,
   FastifyServerOptions,
 } from "fastify";
 import Manifest, { Service } from "./manifest";
@@ -15,6 +15,13 @@ import AutoLoad from "@fastify/autoload";
 import EventEmitter from "eventemitter2";
 import { repl } from "./repl";
 import fp from "fastify-plugin";
+import { newTracer, Tracer } from "./datadog";
+
+declare module "fastify" {
+  interface FastifyInstance {
+    tracer: Tracer;
+  }
+}
 
 const service = Service.parse(process.env.SERVICE);
 
@@ -57,10 +64,12 @@ const options: AppOptions = {
   repl: false,
 };
 
-const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
+const app: FastifyPluginAsync<AppOptions> = async (fastify, options) => {
   // set zod-openapi compilers
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
+
+  fastify.decorate("tracer", await newTracer());
 
   // register root plugins
   void fastify.register(AutoLoad, {
@@ -86,12 +95,10 @@ const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
   if (options.repl) {
     mountServices(Manifest, fastify, { encapsulate: false });
     repl(options.service, fastify);
-    done();
     return;
   }
 
   mountServices(Manifest, fastify, { encapsulate: true });
-  done();
 };
 
 export default app;
