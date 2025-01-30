@@ -9,7 +9,7 @@ import {
   QueueOptions,
 } from "bullmq";
 import { Cluster, Redis } from "ioredis";
-import redis from "./redis";
+import { getConnection } from "./redis";
 import { internalEventEmitter } from "./app";
 
 interface BullOptions {
@@ -55,7 +55,9 @@ interface BullBuilder {
 /**
  * Create a bull builder object ties the a queue to a worker so that type inference is shared across the two
  */
-function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
+function bull({
+  defaultJobOptions,
+}: Omit<BullOptions, "connection">): BullBuilder {
   // keep track of workers so we can close them on close
   const workers: Worker[] = [];
 
@@ -74,9 +76,9 @@ function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
       const queueName = `{${name}}`;
       return {
         globalEvents: internalEventEmitter,
-        events: new QueueEvents(queueName),
+        events: new QueueEvents(queueName, { connection: getConnection() }),
         queue: new Queue(queueName, {
-          connection,
+          connection: getConnection(),
           ...queueOptions,
           defaultJobOptions: {
             ...defaultJobOptions,
@@ -87,7 +89,7 @@ function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
           run: (processor, workerOptions) => {
             const worker = new Worker(queueName, processor, {
               ...workerOptions,
-              connection,
+              connection: getConnection(),
             });
             workers.push(worker);
             return worker;
@@ -102,7 +104,6 @@ function bull({ defaultJobOptions, connection }: BullOptions): BullBuilder {
  * instantiate default buill configuration
  */
 export default bull({
-  connection: redis,
   defaultJobOptions: {
     attempts: 5,
     backoff: {
