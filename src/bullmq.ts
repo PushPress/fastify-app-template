@@ -9,7 +9,7 @@ import {
   QueueOptions,
 } from "bullmq";
 import { Cluster, Redis } from "ioredis";
-import { getConnection } from "./redis";
+import { connection } from "./redis";
 import { internalEventEmitter } from "./app";
 
 interface BullOptions {
@@ -76,9 +76,9 @@ function bull({
       const queueName = `{${name}}`;
       return {
         globalEvents: internalEventEmitter,
-        events: new QueueEvents(queueName, { connection: getConnection() }),
+        events: new QueueEvents(queueName, { connection: connection() }),
         queue: new Queue(queueName, {
-          connection: getConnection(),
+          connection: connection(),
           ...queueOptions,
           defaultJobOptions: {
             ...defaultJobOptions,
@@ -89,7 +89,7 @@ function bull({
           run: (processor, workerOptions) => {
             const worker = new Worker(queueName, processor, {
               ...workerOptions,
-              connection: getConnection(),
+              connection: connection(),
             });
             workers.push(worker);
             return worker;

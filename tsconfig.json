@@ -5,5 +5,6 @@
     "sourceMap": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["eslint.config.mjs", "src/**/*.ts"]
+  "include": ["eslint.config.mjs", "src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "docs"]
 }

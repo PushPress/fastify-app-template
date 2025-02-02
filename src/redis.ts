@@ -2,10 +2,10 @@ import { Cluster, Redis } from "ioredis";
 
 const port = +(process.env.REDIS_PORT || 6379);
 
-let connection: Redis | Cluster;
-export function getConnection() {
+let conn: Redis | Cluster;
+export function connection() {
   if (process.env.REDIS_CLUSTER == "true") {
-    connection = new Cluster(
+    conn = new Cluster(
       [
         {
           host: process.env.REDIS_HOST,
@@ -27,7 +27,7 @@ export function getConnection() {
       },
     );
   } else {
-    connection = new Redis({
+    conn = new Redis({
       host: process.env.REDIS_HOST,
       username: process.env.REDIS_USERNAME,
       password: process.env.REDIS_PASSWORD,
@@ -35,5 +35,5 @@ export function getConnection() {
       port,
     });
   }
-  return connection;
+  return conn;
 }
