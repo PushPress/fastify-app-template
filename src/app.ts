@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { AutoloadPluginOptions } from "@fastify/autoload";
 import {
   FastifyInstance,
-  FastifyPluginAsync,
+  FastifyPluginCallback,
   FastifyServerOptions,
 } from "fastify";
 import Manifest, { Service } from "./manifest";
@@ -15,13 +15,7 @@ import AutoLoad from "@fastify/autoload";
 import EventEmitter from "eventemitter2";
 import { repl } from "./repl";
 import fp from "fastify-plugin";
-import { newTracer, Tracer } from "./datadog";
-
-declare module "fastify" {
-  interface FastifyInstance {
-    tracer: Tracer;
-  }
-}
+import { connection } from "./redis";
 
 const service = Service.parse(process.env.SERVICE);
 
@@ -64,12 +58,10 @@ const options: AppOptions = {
   repl: false,
 };
 
-const app: FastifyPluginAsync<AppOptions> = async (fastify, options) => {
+const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
   // set zod-openapi compilers
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
-
-  fastify.decorate("tracer", await newTracer());
 
   // register root plugins
   void fastify.register(AutoLoad, {
@@ -88,7 +80,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, options) => {
     // close all workers
     await internalEventEmitter.emitAsync("close");
     await fastify.db.destroy();
-    await fastify.redis().quit();
+    await connection().quit();
   });
 
   // Start the repl and expose all decorators on the server context in the repl
@@ -99,6 +91,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, options) => {
   }
 
   mountServices(Manifest, fastify, { encapsulate: true });
+  done();
 };
 
 export default app;

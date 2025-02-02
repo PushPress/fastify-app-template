@@ -1,4 +1,5 @@
 import fp from "fastify-plugin";
+import fs from "fs/promises";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { fastifyZodOpenApiPlugin } from "fastify-zod-openapi";
@@ -26,7 +27,13 @@ export default fp(
     fastify.register(fastifySwaggerUi, {
       routePrefix: "/docs",
     });
+    fastify.addHook("onListen", async () => {
+      await fs.writeFile(
+        "./docs/openapi.json",
+        JSON.stringify(fastify.swagger(), null, 2),
+      );
+    });
     done();
   },
-  { name: "openapi" },
+  { name: "openapi-docs" },
 );

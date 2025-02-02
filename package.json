@@ -17,7 +17,7 @@
     "watch:ts": "tsc -w",
     "dev": "pnpm build && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
     "dev:web": "cd spa && pnpm dev",
-    "dev:start": "fastify start --ignore-watch=.ts$ -o -w -P dist/app.js",
+    "dev:start": "fastify start --ignore-watch='(.ts$|.json$)' -o -w -P dist/app.js",
     "repl": "pnpm build && fastify start -o -P dist/app.js -- --repl",
     "start:prod": "fastify start -o -P dist/app.js",
     "codegen": "export $(grep -v '^#' .env | xargs) && kysely-codegen --dialect postgres --out-file src/types/db.ts --camel-case --url=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}",
