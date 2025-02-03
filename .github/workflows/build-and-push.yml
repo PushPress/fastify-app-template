@@ -1,0 +1,51 @@
+name: Build and Push
+
+on:
+  workflow_dispatch:
+  # uncomment this to build and push on every push to main
+  # push:
+  #   branches:
+  #     - main
+
+env:
+  SERVICE: template
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+  packages: read # This is required for pulling private packages like Datadog when building the image
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::440744257428:role/gh-oidc
+      - uses: aws-actions/amazon-ecr-login@v2
+      - uses: int128/create-ecr-repository-action@v1
+        id: ecr
+        with:
+          repository: ${{ env.SERVICE }}
+      - uses: docker/metadata-action@v4
+        id: metadata
+        with:
+          images: ${{ steps.ecr.outputs.repository-uri }}
+          flavor: |
+            latest=auto
+            suffix=${{ github.sha }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
+          # see https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context
+          build-args: |
+            GIT_REPOSITORY_URL=${{ github.server_url }}/${{ github.repository }}
+            GIT_COMMIT_SHA=${{ github.sha }}
