@@ -1,4 +1,5 @@
-name: "${APP_NAME}-test"
+name: "template-test"
+version: "3.8"
 services:
   db_test:
     image: postgres:15
