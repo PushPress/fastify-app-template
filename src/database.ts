@@ -17,6 +17,13 @@ const dialect = new PostgresDialect({
     port: +(process.env.DB_PORT || 5432),
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    ssl:
+      process.env.NODE_ENV === "test" || process.stdout.isTTY
+        ? false
+        : {
+            rejectUnauthorized: true,
+            ca: process.env.DB_SSL_CA,
+          },
   }),
 });
 export const db = new Kysely<DB>({ dialect, plugins: [new CamelCasePlugin()] });
