@@ -19,7 +19,7 @@
     "dev:web": "cd spa && pnpm dev",
     "dev:start": "fastify start --ignore-watch='(.ts$|.json$)' -o -w -P dist/app.js",
     "repl": "pnpm build && fastify start -o -P dist/app.js -- --repl",
-    "start:prod": "fastify start -o -P dist/app.js",
+    "start:prod": "fastify start -o dist/app.js",
     "codegen": "export $(grep -v '^#' .env | xargs) && kysely-codegen --dialect postgres --out-file src/types/db.ts --camel-case --url=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}",
     "migrate": "kysely migrate"
   },
