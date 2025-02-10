@@ -20,7 +20,8 @@
     "dev:start": "fastify start --ignore-watch='(.ts$|.json$)' -o -w -P dist/app.js",
     "repl": "pnpm build && fastify start -o -P dist/app.js -- --repl",
     "start:prod": "fastify start -o dist/app.js",
-    "codegen": "export $(grep -v '^#' .env | xargs) && kysely-codegen --dialect postgres --out-file src/types/db.ts --camel-case --url=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}",
+    "codegen:db": "export $(grep -v '^#' .env | xargs) && kysely-codegen --dialect postgres --out-file src/types/db.ts --camel-case --url=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}",
+    "codegen:feature-flags": "growthbook features generate-types --output src/types --project prj_19g61wm6h16771",
     "migrate": "kysely migrate"
   },
   "keywords": [],
@@ -38,6 +39,7 @@
     "@pushpress/datadog": "^0.5.0",
     "bullmq": "^5.40.2",
     "dd-trace": "^5.36.0",
+    "@pushpress/fastify-feature-flags": "0.11.0",
     "dotenv": "^16.4.7",
     "eventemitter2": "^6.4.9",
     "fastify": "^5.2.1",

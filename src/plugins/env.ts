@@ -13,6 +13,8 @@ const schema = {
     "DB_NAME",
     "DB_USER",
     "DB_PASSWORD",
+    "GROWTHBOOK_CLIENT_KEY",
+    "GROWTHBOOK_API_HOST",
   ],
   properties: {
     NODE_ENV: {
@@ -60,6 +62,13 @@ const schema = {
     REDIS_CLUSTER: {
       type: "boolean",
       default: false,
+    },
+    GROWTHBOOK_API_HOST: {
+      type: "string",
+      default: "https://cdn.growthbook.io",
+    },
+    GROWTHBOOK_CLIENT_KEY: {
+      type: "string",
     },
   },
 } as const satisfies JSONSchema;

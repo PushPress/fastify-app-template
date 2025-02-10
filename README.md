@@ -89,6 +89,8 @@ Run eslint
 
 Run the test cases.
 
+Note: make sure the runtime dependencies are up first - `docker compose --env-file .env.test -f docker-compose.test.yml up -d`
+
 ### `pnpm repl`
 
 Start the server in a repl session. see [REPL](#repl) for more details.
