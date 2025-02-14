@@ -70,6 +70,10 @@ const schema = {
     GROWTHBOOK_CLIENT_KEY: {
       type: "string",
     },
+    GROWTHBOOK_ENABLE_STREAMING: {
+      type: "boolean",
+      default: true,
+    },
   },
 } as const satisfies JSONSchema;
 
