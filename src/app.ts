@@ -17,8 +17,6 @@ import { repl } from "./repl";
 import fp from "fastify-plugin";
 import { connection } from "./redis";
 
-const service = Service.parse(process.env.SERVICE);
-
 export const internalEventEmitter = new EventEmitter();
 
 /**
@@ -30,18 +28,17 @@ export interface AppOptions
   /**
    *  Service to run as, (e.g api, worker, monolith)
    */
-  service: Service;
+  service?: Service;
   /**
    * Start the application in a repl session
    */
-  repl: boolean;
+  repl?: boolean;
 }
 
 /**
  * This options object is passed to the root plugin below from the fastify CLI
  */
 const options: AppOptions = {
-  service,
   /**
    *  Ignore trailing slashes so /example/ is the same as /example
    */
@@ -59,6 +56,7 @@ const options: AppOptions = {
 };
 
 const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
+  const service = options.service ?? Service.parse(process.env.SERVICE);
   // set zod-openapi compilers
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
@@ -85,12 +83,18 @@ const app: FastifyPluginCallback<AppOptions> = (fastify, options, done) => {
 
   // Start the repl and expose all decorators on the server context in the repl
   if (options.repl) {
-    mountServices(Manifest, fastify, { encapsulate: false });
-    repl(options.service, fastify);
+    mountServices(Manifest, fastify, {
+      encapsulate: false,
+      service,
+    });
+    repl(service, fastify);
     return;
   }
 
-  mountServices(Manifest, fastify, { encapsulate: true });
+  mountServices(Manifest, fastify, {
+    encapsulate: true,
+    service,
+  });
   done();
 };
 
@@ -103,7 +107,7 @@ export { app, options };
 function mountServices(
   manifest: typeof Manifest,
   fastify: FastifyInstance,
-  { encapsulate }: { encapsulate: boolean },
+  { encapsulate, service }: { encapsulate: boolean; service: Service },
 ) {
   void manifest[service].map(([plugin, opts]) =>
     fastify.register(encapsulate ? plugin : fp(plugin), opts ?? {}),
