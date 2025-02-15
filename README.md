@@ -58,6 +58,7 @@ pnpm i @pushpress/pushpress
 Set up local development dependencies with docker compose
 
 ```bash
+chmod +x init.sh
 docker compose up -d
 ```
 

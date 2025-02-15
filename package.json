@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "pretest": "export $(cat .env.test | xargs)",
+    "pretest": "pnpm migrate latest",
     "test": "vitest --no-file-parallelism",
     "test:coverage": "vitest --coverage --watch=false --no-file-parallelism",
     "start": "pnpm build && fastify start -o -P dist/app.js",
