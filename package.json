@@ -22,7 +22,8 @@
     "start:prod": "fastify start -o dist/app.js",
     "codegen:db": "export $(grep -v '^#' .env | xargs) && kysely-codegen --dialect postgres --out-file src/types/db.ts --camel-case --url=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}",
     "codegen:feature-flags": "growthbook features generate-types --output src/types --project prj_19g61wm6h16771",
-    "migrate": "kysely migrate"
+    "migrate": "kysely migrate",
+    "seed": "kysely seed"
   },
   "keywords": [],
   "author": "",
