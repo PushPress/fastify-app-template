@@ -45,7 +45,10 @@ jobs:
         run: pnpm lint
 
       - name: Setup test environment
-        run: docker compose --env-file=.env.test up -d
+        run: |
+          chmod +x init.sh
+          cp .env.test .env
+          docker compose up -d
 
       - name: Test
         run: pnpm test:coverage

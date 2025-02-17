@@ -46,7 +46,10 @@ npx npm-check-updates -i
 Copy the `.env.sample` file to `.env` and update the values to match your environment.
 
 ```bash
+# create the local development environment file
 cp .env.sample .env
+# create the test environment file
+cp .env.sample .env.test
 ```
 
 Install the latest pushpress SDK
