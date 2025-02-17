@@ -17,6 +17,7 @@ export default fp(
     const environment = opts.overrideEnv ?? fastify.config.NODE_ENV;
     const clientKey = fastify.config.GROWTHBOOK_CLIENT_KEY;
     const apiHost = fastify.config.GROWTHBOOK_API_HOST;
+    const streaming = fastify.config.GROWTHBOOK_ENABLE_STREAMING;
 
     const client = await createGrowthBookClient<
       Environments,
@@ -28,6 +29,7 @@ export default fp(
       environment,
       initWaitTimeoutMs: 5000 /* init can block for up to 5 seconds */,
       fallbacks,
+      streaming,
     });
 
     fastify.decorate("featureFlags", client);
