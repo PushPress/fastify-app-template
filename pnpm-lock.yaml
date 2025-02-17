@@ -38,6 +38,9 @@ importers:
       '@pushpress/fastify-feature-flags':
         specifier: 0.12.0
         version: 0.12.0
+      '@pushpress/pushpress':
+        specifier: ^0.21.0
+        version: 0.21.0(zod@3.24.1)
       bullmq:
         specifier: ^5.40.2
         version: 5.40.2
@@ -1036,6 +1039,11 @@ packages:
 
   '@pushpress/fastify-feature-flags@0.12.0':
     resolution: {integrity: sha512-osVKyvDgCH5ghiTuErlZkQl34/E3J0/uuFllVFItLp1kx54cVFpCs+0WMC9PDGcWFNaGT/ASvgfk4Sg/6ijUUg==, tarball: https://npm.pkg.github.com/download/@pushpress/fastify-feature-flags/0.12.0/4ea938a013fca1438a4255c7485a9622af0dd32c}
+
+  '@pushpress/pushpress@0.21.0':
+    resolution: {integrity: sha512-6f0wnqFxE9p/ftMRxBxFAp7yVmT4vpBlxQUm1IeCE+vmNWTgGYPCDcn2wkmPE0fmKnJs8+lSAHaEetTF7xrZkg==, tarball: https://npm.pkg.github.com/download/@pushpress/pushpress/0.21.0/a61cadfb0a96acc96de485717d0663c94ac523de}
+    peerDependencies:
+      zod: '>= 3'
 
   '@radix-ui/react-compose-refs@1.1.1':
     resolution: {integrity: sha512-Y9VzoRDSJtgFMUCoiZBDVo084VQ5hfpXxVE+NgkdNsjiDBByiImMZKKhxMwCbdHvhlENG6a833CbFkOQvTricw==}
@@ -4370,6 +4378,10 @@ snapshots:
     dependencies:
       '@growthbook/growthbook': 1.3.1
       eventsource: 3.0.5
+
+  '@pushpress/pushpress@0.21.0(zod@3.24.1)':
+    dependencies:
+      zod: 3.24.1
 
   '@radix-ui/react-compose-refs@1.1.1(@types/react@19.0.2)(react@19.0.0)':
     dependencies:
