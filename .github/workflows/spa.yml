@@ -1,37 +1,68 @@
-name: UI Checks
+name: Deploy to S3
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "spa/**"
-      - ".github/workflows/spa.yaml"
+  # uncomment the following lines to enable automatic deployments on push to the main branch
+  # push:
+  #   branches:
+  #     - dev
+  #     - staging
+  #     - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "dev"
+        type: environment
+
+permissions:
+  id-token: write
+  contents: read
+  packages: read
 
 jobs:
-  lint-typecheck-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'spa_prod') || (github.ref == 'refs/heads/staging' && 'spa_stg') || 'spa_dev' }}
     defaults:
       run:
         working-directory: "./spa"
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "22.12"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9.3
 
-      - name: Install dependencies
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          cache: "pnpm"
 
-      - name: Lint
-        run: pnpm lint
+      - name: Auth with private github registry
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build --mode ${{ vars.MODE }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_IAM_ROLE }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync dist/ ${{ vars.S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
