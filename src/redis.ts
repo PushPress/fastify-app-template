@@ -18,7 +18,7 @@ export function connection() {
           password: process.env.REDIS_PASSWORD,
           maxRetriesPerRequest: null,
           tls: {
-            checkServerIdentity: (_servername, _cert) => {
+            checkServerIdentity: () => {
               // see https://github.com/redis/ioredis/issues/754
               return undefined;
             },
