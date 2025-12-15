@@ -13,15 +13,16 @@ export function connection() {
         },
       ],
       {
-        // dnsLookup like this is required for elasticache compatibility
-        dnsLookup: (address, callback) => {
-          callback(null, address);
-        },
         redisOptions: {
           username: process.env.REDIS_USERNAME,
           password: process.env.REDIS_PASSWORD,
           maxRetriesPerRequest: null,
-          tls: {},
+          tls: {
+            checkServerIdentity: (_servername, _cert) => {
+              // see https://github.com/redis/ioredis/issues/754
+              return undefined;
+            },
+          },
         },
         slotsRefreshTimeout: Number(process.env.CACHE_SLOT_TIMEOUT) || 2500,
       },
